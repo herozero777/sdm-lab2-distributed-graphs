@@ -62,6 +62,10 @@ public class Exercise_1 {
             new Tuple2<Object,Integer>(3l,6),
             new Tuple2<Object,Integer>(4l,8)
         );
+
+        for(Tuple2<Object, Integer> vertex:vertices)
+        System.out.println("The vertex and its weight :",vertex);
+
         List<Edge<Integer>> edges = Lists.newArrayList(
             new Edge<Integer>(1l,2l, 1),
             new Edge<Integer>(2l,3l, 1),
@@ -75,7 +79,7 @@ public class Exercise_1 {
 
         Graph<Integer,Integer> G = Graph.apply(verticesRDD.rdd(),edgesRDD.rdd(),1, StorageLevel.MEMORY_ONLY(), StorageLevel.MEMORY_ONLY(),
                 scala.reflect.ClassTag$.MODULE$.apply(Integer.class),scala.reflect.ClassTag$.MODULE$.apply(Integer.class));
-
+    
         GraphOps ops = new GraphOps(G, scala.reflect.ClassTag$.MODULE$.apply(Integer.class),scala.reflect.ClassTag$.MODULE$.apply(Integer.class));
 
         Tuple2<Long,Integer> max = (Tuple2<Long,Integer>)ops.pregel(
