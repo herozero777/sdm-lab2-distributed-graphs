@@ -64,7 +64,7 @@ public class Exercise_1 {
         );
 
         for(Tuple2<Object, Integer> vertex:vertices)
-        System.out.println("The vertex and its weight :",vertex);
+        System.out.println(vertex);
 
         List<Edge<Integer>> edges = Lists.newArrayList(
             new Edge<Integer>(1l,2l, 1),
