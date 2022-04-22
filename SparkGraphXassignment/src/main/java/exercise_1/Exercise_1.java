@@ -39,10 +39,10 @@ public class Exercise_1 {
             Tuple2<Object,Integer> dstVertex = triplet.toTuple()._2();
 
             if (sourceVertex._2 <= dstVertex._2) {   // source vertex value is smaller than dst vertex?
-                // do nothing
+                // then do nothing
                 return JavaConverters.asScalaIteratorConverter(new ArrayList<Tuple2<Object,Integer>>().iterator()).asScala();
             } else {
-                // propagate source vertex value
+                // if source vertex value is greater than destination vertex value then, propagate source vertex value
                 return JavaConverters.asScalaIteratorConverter(Arrays.asList(new Tuple2<Object,Integer>(triplet.dstId(),sourceVertex._2)).iterator()).asScala();
             }
         }
@@ -51,7 +51,7 @@ public class Exercise_1 {
     private static class merge extends AbstractFunction2<Integer,Integer,Integer> implements Serializable {
         @Override
         public Integer apply(Integer o, Integer o2) {
-            return null;
+            return Math.max(o,o2);
         }
     }
 
