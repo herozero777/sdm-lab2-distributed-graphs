@@ -62,7 +62,6 @@ public class Exercise_1 {
             new Tuple2<Object,Integer>(3l,6),
             new Tuple2<Object,Integer>(4l,8)
         );
-
         for(Tuple2<Object, Integer> vertex:vertices)
         System.out.println(vertex);
 
@@ -73,6 +72,8 @@ public class Exercise_1 {
             new Edge<Integer>(3l,4l, 1),
             new Edge<Integer>(3l,1l, 1)
         );
+        for(Edge<Integer> edge:edges)
+        System.out.println(edge);
 
         JavaRDD<Tuple2<Object,Integer>> verticesRDD = ctx.parallelize(vertices);
         JavaRDD<Edge<Integer>> edgesRDD = ctx.parallelize(edges);
