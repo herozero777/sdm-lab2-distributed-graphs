@@ -26,14 +26,60 @@ public class Exercise_2 {
     private static class VProg extends AbstractFunction3<Long,Integer,Integer,Integer> implements Serializable {
         @Override
         public Integer apply(Long vertexID, Integer vertexValue, Integer message) {
-            return null;
+            System.out.println("In apply");
+
+            if (message == Integer.MAX_VALUE) {             // superstep 0
+                System.out.println("superstep 0");
+                return vertexValue;
+            } 
+            else {                                        // superstep > 0
+                System.out.println("superstep > 0 ");
+                System.out.println("Message " + message);
+                System.out.println("VertexValue " + vertexValue);
+                if (message < vertexValue) {
+                    return message;
+                } 
+                else {
+                    return vertexValue;
+                }
+            }
+
+            // Way 2
+            // if (message < vertexValue) {             // superstep 0
+            //     System.out.println("superstep 0");
+            //     return message;
+            // } 
+            // else {                                        // superstep > 0
+            //     System.out.println("ID: " + vertexID + " superstep > 0 ");
+            //     System.out.println("Message " + message);
+            //     System.out.println("VertexValue " + vertexValue);
+            //     return vertexValue;
+            // }
         }
     }
 
     private static class sendMsg extends AbstractFunction1<EdgeTriplet<Integer,Integer>, Iterator<Tuple2<Object,Integer>>> implements Serializable {
         @Override
         public Iterator<Tuple2<Object, Integer>> apply(EdgeTriplet<Integer, Integer> triplet) {
-            return null;
+            Tuple2<Object,Integer> sourceVertex = triplet.toTuple()._1();
+            Tuple2<Object,Integer> dstVertex = triplet.toTuple()._2();
+            Integer weight = triplet.toTuple()._3();
+
+            System.out.println("Node: " + sourceVertex._1 + " -- W:" + weight + " + SV:" + sourceVertex._2 + " --> " + "Node: " + dstVertex._1);
+            Integer combined = sourceVertex._2 + weight;
+            // System.out.println("ID: " + sourceVertex._1 + " Send msg " + combined);
+
+
+            if (sourceVertex._2 == Integer.MAX_VALUE) {   // Handle case of superstep 0 where message is sent to all vertexes
+                // do nothing
+                return JavaConverters.asScalaIteratorConverter(new ArrayList<Tuple2<Object,Integer>>().iterator()).asScala();
+            } else {
+                System.out.println(" ------- Send ------- ");
+                // propagate source vertex value + edge weight
+                return JavaConverters.asScalaIteratorConverter(Arrays.asList(new Tuple2<Object,Integer>(triplet.dstId(), combined ))
+                .iterator()).asScala();
+            }
+            // return null;
         }
     }
 
@@ -79,8 +125,8 @@ public class Exercise_2 {
                 scala.reflect.ClassTag$.MODULE$.apply(Integer.class),scala.reflect.ClassTag$.MODULE$.apply(Integer.class));
 
         GraphOps ops = new GraphOps(G, scala.reflect.ClassTag$.MODULE$.apply(Integer.class),scala.reflect.ClassTag$.MODULE$.apply(Integer.class));
-
-        ops.pregel(Integer.MAX_VALUE,
+        ops.pregel(
+                Integer.MAX_VALUE,
                 Integer.MAX_VALUE,
                 EdgeDirection.Out(),
                 new VProg(),
