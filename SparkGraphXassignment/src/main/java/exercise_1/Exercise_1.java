@@ -51,12 +51,12 @@ public class Exercise_1 {
     private static class merge extends AbstractFunction2<Integer,Integer,Integer> implements Serializable {
         @Override
         public Integer apply(Integer o, Integer o2) {
-            return Math.max(o,o2);
+            return Math.max(o,o2); //this method returns the greater of two integer values
         }
     }
 
     public static void maxValue(JavaSparkContext ctx) {
-        List<Tuple2<Object,Integer>> vertices = Lists.newArrayList(
+        List<Tuple2<Object,Integer>> vertices = Lists.newArrayList(     //List in Java provides the facility to maintain the ordered collection. It contains the index-based methods to insert, update, delete and search the elements. It can have the duplicate elements also. We can also store the null elements in the list.
             new Tuple2<Object,Integer>(1l,9),
             new Tuple2<Object,Integer>(2l,1),
             new Tuple2<Object,Integer>(3l,6),
