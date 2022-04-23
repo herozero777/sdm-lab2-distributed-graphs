@@ -21,7 +21,7 @@ import java.util.List;
 
 public class Exercise_1 {
 
-    private static class VProg extends AbstractFunction3<Long,Integer,Integer,Integer> implements Serializable {
+    private static class VProg extends AbstractFunction3<Long,Integer,Integer,Integer> implements Serializable { //implementing serializable interface
         @Override
         public Integer apply(Long vertexID, Integer vertexValue, Integer message) {
             if (message == Integer.MAX_VALUE) {             // superstep 0
@@ -57,8 +57,8 @@ public class Exercise_1 {
 
     public static void maxValue(JavaSparkContext ctx) {
         List<Tuple2<Object,Integer>> vertices = Lists.newArrayList(     //List in Java provides the facility to maintain the ordered collection. It contains the index-based methods to insert, update, delete and search the elements. It can have the duplicate elements also. We can also store the null elements in the list.
-            new Tuple2<Object,Integer>(1l,9),
-            new Tuple2<Object,Integer>(2l,1),
+            new Tuple2<Object,Integer>(1l,9), // (vertexID,value)
+            new Tuple2<Object,Integer>(2l,1), 
             new Tuple2<Object,Integer>(3l,6),
             new Tuple2<Object,Integer>(4l,8)
         );
@@ -66,11 +66,11 @@ public class Exercise_1 {
         System.out.println(vertex);
 
         List<Edge<Integer>> edges = Lists.newArrayList(
-            new Edge<Integer>(1l,2l, 1),
-            new Edge<Integer>(2l,3l, 1),
-            new Edge<Integer>(2l,4l, 1),
-            new Edge<Integer>(3l,4l, 1),
-            new Edge<Integer>(3l,1l, 1)
+            new Edge<Integer>(1l,2l, 1), //indicate the edge from vertex1 to vertex2 with weight 1
+            new Edge<Integer>(2l,3l, 1), //indicate the edge from vertex2 to vertex3 with weight 1
+            new Edge<Integer>(2l,4l, 1), //indicate the edge from vertex2 to vertex4 with weight 1
+            new Edge<Integer>(3l,4l, 1), //indicate the edge from vertex3 to vertex4 with weight 1
+            new Edge<Integer>(3l,1l, 1)  //indicate the edge from vertex3 to vertex1 with weight 1
         );
         for(Edge<Integer> edge:edges)
         System.out.println(edge);
