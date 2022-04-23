@@ -31,14 +31,14 @@ public class Exercise_4 {
 		ListEdge.add(DataTypes.createStructField("dst",DataTypes.LongType,false));
 		StructType forEdge = DataTypes.createStructType(ListEdge);
 
-		Dataset<Row> V = sqlCtx.createDataFrame(vertex.map(v ->
-		RowFactory.create(Long.parseLong(v.split("\t")[0]),v.split("\t")[1])),forVertex);
-        Dataset<Row> E = sqlCtx.createDataFrame(edge.map(e ->
+		Dataset<Row> v1 = sqlCtx.createDataFrame(vertex.map(v ->  //Dataset is a distributed collection of data
+		RowFactory.create(Long.parseLong(v.split("\t")[0]),v.split("\t")[1])),forVertex); //A factory class used to construct Row objects
+        Dataset<Row> e1 = sqlCtx.createDataFrame(edge.map(e ->
 		RowFactory.create(Long.parseLong(e.split("\t")[0]),Long.parseLong(e.split("\t")[1]))),forEdge);
-        GraphFrame graph = GraphFrame.apply(V,E);
+        GraphFrame graph = GraphFrame.apply(v1,e1);
 
         org.graphframes.lib.PageRank pgRank = graph.pageRank().resetProbability(0.15).maxIter(10);
-        GraphFrame pgRankGraph = pgRank.run();
+        GraphFrame pgRankGraph = pgRank.run(); //Run PageRank for a fixed number of iterations returning a graph with vertex attributes containing the PageRank and edge attributes the normalized edge weight.
         for (Row rname : pgRankGraph.vertices().sort(org.apache.spark.sql.functions.desc("Pagerank for the given dataset is:")).toJavaRDD().take(10)) 
 		{
 	    System.out.println(rname.getString(1));
