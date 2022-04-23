@@ -16,7 +16,8 @@ import java.util.List;
 
 public class Exercise_4 {
 	
-	public static void wikipedia(JavaSparkContext ctx, SQLContext sqlCtx) {
+	public static void wikipedia(JavaSparkContext ctx, SQLContext sqlCtx) { //JavaSparkContext:Java-friendly version of SparkContext that returns JavaRDDs and works with Java collections instead of Scala ones
+		//SQLContext:entry point for working with structured data(rows&columns)in Spark
 		JavaRDD<String> vertex = ctx.textFile("src/main/resources/wiki-vertices.txt");
 		JavaRDD<String> edge = ctx.textFile("src/main/resources/wiki-edges.txt");
 
