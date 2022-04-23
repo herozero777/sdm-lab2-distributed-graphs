@@ -16,7 +16,7 @@ import utils.Utils;
 
 public class Main {
 
-	static String HADOOP_COMMON_PATH = "C:\\Users\\Lab_2\\SparkGraphXassignment\\src\\main\\resources"; // "C:\\...\\SparkGraphXassignment\\src\\main\\resources"
+	static String HADOOP_COMMON_PATH = "C:\\SparkGraphXassignment\\src\\main\\resources\\bin"; // "C:\\...\\SparkGraphXassignment\\src\\main\\resources"
 	
 	public static void main(String[] args) throws Exception {
 		System.setProperty("hadoop.home.dir", HADOOP_COMMON_PATH);
