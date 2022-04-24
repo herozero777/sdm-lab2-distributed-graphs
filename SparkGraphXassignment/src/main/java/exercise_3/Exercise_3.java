@@ -20,22 +20,59 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 public class Exercise_3 {
+
+    // To store the parent of each vertex
+    static Map<Object, Object> parents = new HashMap<Object, Object>();
+
+    // function to recursively get the path till source
+    public static void get_recursive_path(Object vert, Map<Object, Object> parent_map, List<String> path, Map<Long, String> labels){
+        if (parent_map.get(vert)==(Object)(-1l)) {
+            return;
+        } else {
+            Object parent_vertex = parent_map.get(vert);
+            path.add(labels.get(parent_vertex));
+            get_recursive_path(parent_vertex, parent_map, path, labels);
+        }
+    }
+
+    /**
+    * Returns path from source to the specified vertex
+    *
+    * @param vertex     The vertex to which shortest path isto be returned
+    * @param parent_map Hashmap that stores the information about each vertex's parent
+    * @param label      The mapping from Object "1l" to name of the vertex "A"
+    * @return           Path from "A" to the specified vertex 
+    */
+    // function to save the whole path in a list and return back
+    public static List<String> get_path(Object vertex, Map<Object, Object> parent_map, Map<Long, String> labels){
+        List<String> path = new ArrayList<>();
+        path.add(labels.get(vertex));
+        get_recursive_path(vertex, parent_map, path, labels);
+
+        // Reverse the path list for correct output
+        for (int k = 0, j = path.size() - 1; k < j; k++)
+        {
+            path.add(k, path.remove(j));
+        }
+        return path;
+    }
 
     private static class VProg extends AbstractFunction3<Long,Integer,Integer,Integer> implements Serializable {
         @Override
         public Integer apply(Long vertexID, Integer vertexValue, Integer message) {
-            System.out.println("In apply");
+            // System.out.println("In apply");
 
             if (message == Integer.MAX_VALUE) {             // superstep 0
-                System.out.println("superstep 0");
+                // System.out.println("superstep 0");
                 return vertexValue;
             } 
             else {                                        // superstep > 0
-                System.out.println("superstep > 0 ");
-                System.out.println("Message " + message);
-                System.out.println("VertexValue " + vertexValue);
+                // System.out.println("superstep > 0 ");
+                // System.out.println("Message " + message);
+                // System.out.println("VertexValue " + vertexValue);
                 if (message < vertexValue) {
                     return message;
                 } 
@@ -70,11 +107,13 @@ public class Exercise_3 {
             // System.out.println("ID: " + sourceVertex._1 + " Send msg " + combined);
 
 
-            if (sourceVertex._2 == Integer.MAX_VALUE) {   // Handle case of superstep 0 where message is sent to all vertexes
+            if (sourceVertex._2 == Integer.MAX_VALUE || dstVertex._2 < combined) {   // Handle case of superstep 0 where message is sent to all vertexes
                 // do nothing
                 return JavaConverters.asScalaIteratorConverter(new ArrayList<Tuple2<Object,Integer>>().iterator()).asScala();
             } else {
-                System.out.println(" ------- Send ------- ");
+                
+                // Set the current vertex parent of the dstVertex
+                parents.put(dstVertex._1, sourceVertex._1);
                 // propagate source vertex value + edge weight
                 return JavaConverters.asScalaIteratorConverter(Arrays.asList(new Tuple2<Object,Integer>(triplet.dstId(), combined ))
                 .iterator()).asScala();
@@ -118,11 +157,33 @@ public class Exercise_3 {
                 new Edge<Integer>(4l, 6l, 11) // D --> F (11)
         );
 
+        // initializing the parent list of vertices with -1 
+        for (Tuple2<Object,Integer> vertex_var :vertices){
+            Object key = vertex_var._1();
+            parents.put(key, (Object)(-1l));
+        }
+        
+        System.out.println(" --------------- Test --------------- ");
+        // Test ----------------------------------
+        parents.put((Object)(3l), (Object)(1l));
+        parents.put((Object)(5l), (Object)(3l));
+
+        // List<String> path = get_path((Object)(5l), parents, labels);
+        // System.out.println(path);
+
+        // ---------------------------------------
+
         JavaRDD<Tuple2<Object,Integer>> verticesRDD = ctx.parallelize(vertices);
         JavaRDD<Edge<Integer>> edgesRDD = ctx.parallelize(edges);
 
-        Graph<Integer,Integer> G = Graph.apply(verticesRDD.rdd(),edgesRDD.rdd(),1, StorageLevel.MEMORY_ONLY(), StorageLevel.MEMORY_ONLY(),
-                scala.reflect.ClassTag$.MODULE$.apply(Integer.class),scala.reflect.ClassTag$.MODULE$.apply(Integer.class));
+        Graph<Integer,Integer> G = Graph.apply( verticesRDD.rdd(),
+                                                edgesRDD.rdd(),
+                                                1, 
+                                                StorageLevel.MEMORY_ONLY(), 
+                                                StorageLevel.MEMORY_ONLY(),
+                                                scala.reflect.ClassTag$.MODULE$.apply(Integer.class),
+                                                scala.reflect.ClassTag$.MODULE$.apply(Integer.class)
+                                            );
 
         GraphOps ops = new GraphOps(G, scala.reflect.ClassTag$.MODULE$.apply(Integer.class),scala.reflect.ClassTag$.MODULE$.apply(Integer.class));
         ops.pregel(
@@ -137,7 +198,8 @@ public class Exercise_3 {
             .toJavaRDD()
             .foreach(v -> {
                 Tuple2<Object,Integer> vertex = (Tuple2<Object,Integer>)v;
-                System.out.println("Minimum cost to get from "+labels.get(1l)+" to "+labels.get(vertex._1)+" is "+vertex._2);
+                List<String> path = get_path( vertex._1 , parents, labels);
+                System.out.println("Minimum path to get from "+labels.get(1l)+" to "+labels.get(vertex._1)+" is " + path + " with cost " +vertex._2);
             });
 	}
 
