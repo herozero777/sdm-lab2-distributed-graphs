@@ -18,17 +18,17 @@ public class Exercise_4 {
 	
 	public static void wikipedia(JavaSparkContext ctx, SQLContext sqlCtx) { //JavaSparkContext:Java-friendly version of SparkContext that returns JavaRDDs and works with Java collections instead of Scala ones
 		//SQLContext:entry point for working with structured data(rows&columns)in Spark
-		JavaRDD<String> vertex = ctx.textFile("src/main/resources/wiki-vertices.txt"); //getting the data for vertices from this file
-		JavaRDD<String> edge = ctx.textFile("src/main/resources/wiki-edges.txt"); //getting the data for edges from this file
+		JavaRDD<String> vertex = ctx.textFile("SparkGraphXAssignment/src/main/resources/wiki-vertices.txt"); //getting the data for vertices from this file
+		JavaRDD<String> edge = ctx.textFile("SparkGraphXAssignment/src/main/resources/wiki-edges.txt"); //getting the data for edges from this file
 
 		List<StructField> ListVertex = Lists.newArrayList(); //StructField class is used to programmatically specify the schema to the DataFrame
 		ListVertex.add(DataTypes.createStructField("id",DataTypes.LongType,false));
-		ListVertex.add(DataTypes.createStructField("name",DataTypes.StringType,false));
+		ListVertex.add(DataTypes.createStructField("title",DataTypes.StringType,false));
 		StructType forVertex = DataTypes.createStructType(ListVertex); //StructType is a collection of StructField
 
 		List<StructField> ListEdge = Lists.newArrayList();
-		ListEdge.add(DataTypes.createStructField("src",DataTypes.LongType,false));
-		ListEdge.add(DataTypes.createStructField("dst",DataTypes.LongType,false));
+		ListEdge.add(DataTypes.createStructField("source",DataTypes.LongType,false));
+		ListEdge.add(DataTypes.createStructField("dest",DataTypes.LongType,false));
 		StructType forEdge = DataTypes.createStructType(ListEdge);
 
 		Dataset<Row> v1 = sqlCtx.createDataFrame(vertex.map(v ->  //Dataset is a distributed collection of data
