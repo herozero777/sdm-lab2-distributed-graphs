@@ -163,10 +163,10 @@ public class Exercise_3 {
             parents.put(key, (Object)(-1l));
         }
         
-        System.out.println(" --------------- Test --------------- ");
+        // System.out.println(" --------------- Test --------------- ");
         // Test ----------------------------------
-        parents.put((Object)(3l), (Object)(1l));
-        parents.put((Object)(5l), (Object)(3l));
+        // parents.put((Object)(3l), (Object)(1l));
+        // parents.put((Object)(5l), (Object)(3l));
 
         // List<String> path = get_path((Object)(5l), parents, labels);
         // System.out.println(path);
